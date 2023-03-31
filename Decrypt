@@ -1,0 +1,22 @@
+### Desciframos con GPG ####
+import gnupg
+from google.colab import files
+
+# Inicializa el objeto GPG
+gpg = gnupg.GPG()
+
+# Pide al usuario el archivo cifrado a descifrar
+file = files.upload()
+filename = list(file.keys())[0]
+
+# Pide al usuario la contraseña para descifrar
+password = input("Introduzca la contraseña para descifrar: ")
+
+# Descifra el archivo con GPG
+with open(filename, 'rb') as f:
+    decrypted_data = gpg.decrypt(f.read(), passphrase=password)
+    with open(filename[:-4], "wb") as outfile:  # El nombre original del archivo se obtiene eliminando los últimos 4 caracteres (.gpg)
+        outfile.write(decrypted_data.data)
+
+# Descarga el archivo descifrado
+files.download(filename[:-4])
