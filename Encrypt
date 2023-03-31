@@ -1,0 +1,23 @@
+### Encriptamos con GPG ####
+### Encriptamos con GPG ####
+import gnupg
+from google.colab import files
+
+# Inicializa el objeto GPG
+gpg = gnupg.GPG()
+
+# Pide al usuario el archivo a cifrar
+file = files.upload()
+filename = list(file.keys())[0]
+
+# Pide al usuario la contraseña para cifrar
+password = input("Introduzca la contraseña para cifrar: ")
+
+# Cifra el archivo con GPG
+with open(filename, 'rb') as f:
+    encrypted_data = gpg.encrypt(f.read(), symmetric='AES256', passphrase=password)
+    with open(filename + ".gpg", "wb") as outfile:
+        outfile.write(str(encrypted_data).encode('utf-8'))
+
+# Descarga el archivo cifrado
+files.download(filename + ".gpg")
